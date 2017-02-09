@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "数独";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/shu.du.js?v=1"></script>
+    <title>数独</title>
+</head>
+<body style="text-align:center">
+    <div>
+        <div style="float:left">
+            <input type="button" value="JS计算界面" onclick="window.location.href = '/Home/'" />
+        </div>
+        <input type="button" value="唯一值计算" onclick="solution1_shu_du_only_one()" />
+        <input type="button" value="唯一值计算2" onclick="solution1_shu_du_only_one2()" />
+        <input type="button" value="唯一值综合" onclick="solution1_shu_du_only_one3()" />
+        <input type="button" value="回溯推算" onclick="solution1_shu_du_backtracking()" />
+        <input type="button" value="综合计算" onclick="solution1_shu_du_auto()" />
+        <input type="button" value="日期获取题目" onclick="get_html()" />
+        <div style="float:right">
+            <input type="button" value="原始网站" onclick="javascript: window.open('http://cn.sudokupuzzle.org/')" />
+        </div>
+    </div>
+    <div id="html_text">
+        @ViewBag.ShuDuHtml
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    function solution1_shu_du_only_one() {
+        get_solution('SolutionOnlyOne');
+    }
+    function solution1_shu_du_only_one2() {
+        get_solution('SolutionOnlyOne2');
+    }
+    function solution1_shu_du_only_one3() {
+        get_solution('SolutionOnlyOne3');
+    }
+    function solution1_shu_du_backtracking() {
+        get_solution('SolutionBacktracking');
+    }
+    function solution1_shu_du_auto() {
+        get_solution('SolutionAuto');
+    }
+    function get_solution(funcName) {
+        var data = get_text();
+        $.ajax({
+            url: window.location.origin + "/Solution1/" + funcName,
+            type: "post",
+            data: { original: data },
+            dataType: 'json',
+            success: function (data) {
+                show_value(data);
+            }
+        });
+    }
+    function get_html() {
+        var date = $('#5421').val();
+        if (date == '') {
+            alert("获取日期文本失败！");
+            return;
+        }
+        var index_y = date.indexOf('年');
+        if (index_y < 0) {
+            alert("日期格式错误！格式应为：‘2017年1月24日’");
+            return;
+        }
+        var y = date.substring(0, index_y);
+
+        var index_m = date.indexOf('月');
+        if (index_m < 0) {
+            alert("日期格式错误！格式应为：‘2017年1月24日’");
+            return;
+        }
+        var m = date.substring(index_y + 1, index_m);
+        var index_d = date.indexOf('日');
+        if (index_d < 0) {
+            alert("日期格式错误！格式应为：‘2017年1月24日’");
+            return;
+        }
+        var d = date.substring(index_m + 1, index_d);
+        window.location.href = "?nd=&y=" + y + "&m=" + m + "&d=" + d;
+    }
+</script>
